@@ -7,11 +7,62 @@
 
 ```bash
 sudo dnf update -y
-sudo dnf install -y docker docker-compose-plugin git
+sudo yum install git -y
+
+sudo yum install -y docker
+sudo systemctl start docker
+sudo systemctl enable docker
+
+sudo usermod -a -G docker ec2-user
+
+# まだなら git を入れる
+sudo dnf install -y git
+
+# SSH鍵をEC2で作成（３回Enter連打でOK）
+ssh-keygen -t ed25519
+
+# 公開鍵を表示してコピー
+cat ~/.ssh/id_ed25519.pub
+
+
+コピーした内容を GitHub → Settings → SSH and GPG keys → New SSH key に貼り付けて保存
+
+ssh -T git@github.com   # "Hi <ユーザー名>!" が出たらいい
+
+git clone git@github.com:akito64/kadai.git
+cd kadai
+
+
+
+
+Dockerデーモン起動
 sudo systemctl enable --now docker
-sudo usermod -aG docker ec2-user
-newgrp docker            # グループ反映（再ログインでも可）
-docker compose version   # 動作確認
+sudo usermod -aG docker $USER
+newgrp docker
+docker ps   # エラーが出なければOK
+
+
+Docker Compose v2を入れる
+sudo mkdir -p /usr/local/lib/docker/cli-plugins
+sudo curl -SL "https://github.com/docker/compose/releases/download/${VER}/docker-compose-linux-${BIN}" \
+  -o /usr/local/lib/docker/cli-plugins/docker-compose
+sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+
+docker compose version
+
+
+次に.envを作成
+cat > .env <<'EOF'
+MYSQL_ROOT_PASSWORD=changeme_root
+MYSQL_DATABASE=example_db
+MYSQL_USER=bbs_user
+MYSQL_PASSWORD=changeme_app
+EOF
+
+アップロード先を用意する
+mkdir -p public/uploads
+chmod 777 public/uploads
+
 
 # ビルド
 docker compose build
