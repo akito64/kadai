@@ -13,25 +13,24 @@ ssh -i your-key.pem ec2-user@<EC2_PUBLIC_IP>
 
 ```bash
 sudo dnf update -y
-sudo yum install git -y
-
-sudo yum install -y docker
-sudo systemctl start docker
+sudo dnf install -y docker
 sudo systemctl enable docker
+sudo systemctl start docker
+sudo mkdir -p /usr/local/lib/docker/cli-plugins/
 sudo curl -SL https://github.com/docker/compose/releases/download/v2.36.0/docker-compose-linux-x86_64 -o /usr/local/lib/docker/cli-plugins/docker-compose
 sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+sudo usermod -aG docker ec2-user
+再ログイン後に確認:
 
-sudo usermod -a -G docker ec2-user
+docker --version
+docker compose version
 
-# まだなら git を入れる
-sudo dnf install -y git
-
-再ログイン
+gitからソースコードを取得
 
 git clone git@github.com:akito64/kadai.git
 cd kadai
 
-docker compose version
+
 
 
 次に.envを作成
