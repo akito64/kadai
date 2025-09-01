@@ -3,6 +3,12 @@
 シンプルな画像付きBBS。投稿本文と画像を保存し、一覧表示します。  
 和風テイストのCSSと**スマホ自動
 ---
+
+SSH 接続:
+
+ssh -i your-key.pem ec2-user@<EC2_PUBLIC_IP>
+
+
 ## 1. docker および docker compose のインストール方法（Amazon Linux 2023 例）
 
 ```bash
@@ -12,41 +18,18 @@ sudo yum install git -y
 sudo yum install -y docker
 sudo systemctl start docker
 sudo systemctl enable docker
+sudo curl -SL https://github.com/docker/compose/releases/download/v2.36.0/docker-compose-linux-x86_64 -o /usr/local/lib/docker/cli-plugins/docker-compose
+sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 
 sudo usermod -a -G docker ec2-user
 
 # まだなら git を入れる
 sudo dnf install -y git
 
-# SSH鍵をEC2で作成（３回Enter連打でOK）
-ssh-keygen -t ed25519
-
-# 公開鍵を表示してコピー
-cat ~/.ssh/id_ed25519.pub
-
-
-コピーした内容を GitHub → Settings → SSH and GPG keys → New SSH key に貼り付けて保存
-
-ssh -T git@github.com   # "Hi <ユーザー名>!" が出たらいい
+再ログイン
 
 git clone git@github.com:akito64/kadai.git
 cd kadai
-
-
-
-
-Dockerデーモン起動
-sudo systemctl enable --now docker
-sudo usermod -aG docker $USER
-newgrp docker
-docker ps   # エラーが出なければOK
-
-
-Docker Compose v2を入れる
-sudo mkdir -p /usr/local/lib/docker/cli-plugins
-sudo curl -SL "https://github.com/docker/compose/releases/download/${VER}/docker-compose-linux-${BIN}" \
-  -o /usr/local/lib/docker/cli-plugins/docker-compose
-sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 
 docker compose version
 
@@ -70,8 +53,6 @@ docker compose build
 # 起動
 docker compose up
 
-# 起動確認
-docker compose ps
 
 テーブルの作成方法
 MySQL コンテナに入ってテーブルを作成
@@ -85,10 +66,12 @@ CREATE TABLE `bbs_entries` (
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-## 0. ソース取得（git clone）
+ALTER TABLE bbs_entries ADD COLUMN image_filename VARCHAR(255) NULL AFTER body;
+
+# ビルド
+docker compose build
+
+# 起動
+docker compose up
 
 
-### SSH（公開鍵をGitHubに登録済みの人向け）
-```bash
-git clone git@github.com:akito64/kadai.git
-cd kadai
