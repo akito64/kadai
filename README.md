@@ -13,6 +13,7 @@ ssh -i your-key.pem ec2-user@<EC2_PUBLIC_IP>
 
 ```bash
 sudo dnf update -y
+sudo dnf install -y git
 sudo dnf install -y docker
 sudo systemctl enable docker
 sudo systemctl start docker
