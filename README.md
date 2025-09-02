@@ -4,6 +4,8 @@
 和風テイストのCSSと**スマホ自動
 ---
 
+
+
 SSH 接続:
 
 ssh -i your-key.pem ec2-user@<EC2_PUBLIC_IP>
@@ -74,4 +76,5 @@ docker compose build
 # 起動
 docker compose up
 
+アクセス: - アプリ: http://<EC2_PUBLIC_IP>/bbsimagetest.php
 
