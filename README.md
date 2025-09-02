@@ -28,7 +28,7 @@ docker compose version
 
 gitからソースコードを取得
 
-git clone git@github.com:akito64/kadai.git
+git clone https://github.com/akito64/kadai.git
 cd kadai
 
 
