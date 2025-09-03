@@ -72,5 +72,5 @@ docker compose build
 # 起動
 docker compose up
 
-アクセス: - アプリ: http://<EC2_PUBLIC_IP>/bbsimagetest.php
+アクセス: - アプリ: http://54.221.188.178/bbsimagetest.php
 
