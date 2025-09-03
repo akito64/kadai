@@ -6,10 +6,6 @@
 
 
 
-SSH 接続:
-
-ssh -i your-key.pem ec2-user@<EC2_PUBLIC_IP>
-
 
 ## 1. docker および docker compose のインストール方法（Amazon Linux 2023 例）
 
